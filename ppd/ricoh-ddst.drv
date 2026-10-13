@@ -1,0 +1,79 @@
+// CUPS driver information file for Ricoh DDST GDI printers.
+// Compile with:  ppdc -d ppd ppd/ricoh-ddst.drv
+//
+// All models share one raster filter (rastertoricohddst) that receives
+// 1-bit black raster from CUPS and converts it to PJL + JBIG.
+
+#include <media.defs>
+
+Manufacturer "Ricoh"
+Version 2.0
+DriverType custom
+ModelNumber 0
+ColorDevice No
+Throughput 20
+ManualCopies Yes
+Filter "application/vnd.cups-raster 0 rastertoricohddst"
+
+// The printer cannot print within ~4 mm of the edge. The filter still
+// sends a full-sheet bitmap, as the printer expects.
+HWMargins 12 12 12 12
+
+*MediaSize A4
+MediaSize A5
+MediaSize A6
+MediaSize Letter
+MediaSize Legal
+MediaSize B5
+MediaSize B6
+MediaSize EnvMonarch
+
+*InputSlot 1 "TRAY1/Tray 1"
+
+*Resolution k 1 0 0 0 "600dpi/600 DPI"
+
+// Standard: Ghostscript renders 1-bit black directly (best for text).
+// Photo: Ghostscript renders 8-bit gray and the filter applies a
+// clustered-dot screen with dot-gain compensation (smoother grays/photos).
+// Ordered after Resolution so it can override the bit depth.
+Group "General/General"
+  Option "Halftone/Halftone" PickOne AnySetup 20
+    *Choice "Standard/Standard (text, line art)" "<</cupsBitsPerColor 1/cupsColorSpace 3>>setpagedevice"
+    Choice "Photo/Photo (smooth grays)" "<</cupsBitsPerColor 8/cupsColorSpace 0>>setpagedevice"
+
+{
+  ModelName "SP 100"
+  Attribute NickName "" "Ricoh SP 100, rastertoricohddst 2.0"
+  Attribute 1284DeviceID "" "MFG:RICOH;MDL:SP 100;CMD:PJL,GDI_RL;"
+  PCFileName "rsp100.ppd"
+}
+
+{
+  ModelName "SP 111"
+  Attribute NickName "" "Ricoh SP 111, rastertoricohddst 2.0"
+  Attribute 1284DeviceID "" "MFG:RICOH;MDL:SP 111;CMD:PJL,GDI_RL;"
+  PCFileName "rsp111.ppd"
+}
+
+{
+  ModelName "SP 111SU"
+  Attribute NickName "" "Ricoh SP 111SU, rastertoricohddst 2.0"
+  Attribute 1284DeviceID "" "MFG:RICOH;MDL:SP 111SU DDST;CMD:PJL,GDI_RL;"
+  PCFileName "rsp111su.ppd"
+}
+
+{
+  ModelName "SP 112"
+  Attribute NickName "" "Ricoh SP 112, rastertoricohddst 2.0"
+  Attribute 1284DeviceID "" "MFG:RICOH;MDL:SP 112 DDST;CMD:PJL,GDI_RL;"
+  PCFileName "rsp112.ppd"
+}
+
+{
+  ModelName "SP 204"
+  Attribute NickName "" "Ricoh SP 204, rastertoricohddst 2.0"
+  Attribute 1284DeviceID "" "MFG:RICOH;MDL:SP 204;CMD:PJL,GDI_RL;"
+  PCFileName "rsp204.ppd"
+  InputSlot 0 "MANUALFEED/Bypass Tray"
+  Resolution k 1 0 0 0 "1200x600dpi/1200x600 DPI"
+}
